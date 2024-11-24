@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display and Auto-Copy Code</title>
+    <title>Display and Copy Code</title>
     <style>
         body {
             display: flex;
@@ -20,12 +20,16 @@
             border: 2px solid #007bff;
             border-radius: 10px;
             background-color: white;
+            cursor: pointer;
             color: #007bff;
+        }
+        .code-container:hover {
+            background-color: #e6f7ff;
         }
     </style>
 </head>
 <body>
-    <div class="code-container" id="code-container">
+    <div class="code-container" id="code-container" onclick="copyCode()">
         Loading...
     </div>
 
@@ -37,9 +41,10 @@
         }
 
         // Function to copy code to the clipboard
-        function autoCopyCode(code) {
+        function copyCode() {
+            const code = document.getElementById('code-container').innerText;
             navigator.clipboard.writeText(code).then(() => {
-                console.log('Code copied to clipboard: ' + code);
+                alert('Code copied to clipboard: ' + code);
             }).catch(err => {
                 console.error('Failed to copy: ' + err);
             });
@@ -49,8 +54,13 @@
         const code = getUrlParameter('code');
         const container = document.getElementById('code-container');
         if (code) {
-            container.innerText = `Code: ${code}`;
-            autoCopyCode(code); // Automatically copy the code
+            container.innerText = code;
+            // Automatically copy the code on page load
+            navigator.clipboard.writeText(code).then(() => {
+                console.log('Code automatically copied to clipboard: ' + code);
+            }).catch(err => {
+                console.error('Failed to copy automatically: ' + err);
+            });
         } else {
             container.innerText = 'No code found in URL!';
         }
