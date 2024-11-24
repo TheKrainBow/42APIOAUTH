@@ -3,34 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display and Copy Code</title>
+    <title>Game Login Code</title>
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f0f8ff;
+            text-align: center;
+            color: #333;
         }
         .code-container {
-            text-align: center;
+            display: inline-block;
             padding: 20px;
             border: 2px solid #007bff;
             border-radius: 10px;
             background-color: white;
-            cursor: pointer;
             color: #007bff;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
         }
         .code-container:hover {
             background-color: #e6f7ff;
+        }
+        .instructions {
+            font-size: 16px;
+            color: #555;
         }
     </style>
 </head>
 <body>
     <div class="code-container" id="code-container" onclick="copyCode()">
         Loading...
+    </div>
+    <div class="instructions">
+        Click code to copy it, then use the login command in the game: <strong>/login &lt;code&gt;</strong>
     </div>
 
     <script>
@@ -40,11 +53,12 @@
             return params.get(name);
         }
 
-        // Function to copy code to the clipboard
+        // Function to copy the formatted code to the clipboard
         function copyCode() {
             const code = document.getElementById('code-container').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                alert('Code copied to clipboard: ' + code);
+            const formattedCode = `/login ${code}`;
+            navigator.clipboard.writeText(formattedCode).then(() => {
+                alert(`Copied to clipboard: ${formattedCode}`);
             }).catch(err => {
                 console.error('Failed to copy: ' + err);
             });
@@ -55,9 +69,10 @@
         const container = document.getElementById('code-container');
         if (code) {
             container.innerText = code;
-            // Automatically copy the code on page load
-            navigator.clipboard.writeText(code).then(() => {
-                console.log('Code automatically copied to clipboard: ' + code);
+            // Automatically copy the formatted code on page load
+            const formattedCode = `/login ${code}`;
+            navigator.clipboard.writeText(formattedCode).then(() => {
+                console.log('Code automatically copied to clipboard: ' + formattedCode);
             }).catch(err => {
                 console.error('Failed to copy automatically: ' + err);
             });
