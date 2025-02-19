@@ -3,82 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Login Code</title>
+    <title>Server Rules</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
             text-align: center;
-            color: #333;
         }
-        .code-container {
-            display: inline-block;
+        .container {
+            width: 90%;
+            max-width: 80%;
             padding: 20px;
+            background-color: white;
             border: 2px solid #007bff;
             border-radius: 10px;
-            background-color: white;
+        }
+        h1 {
             color: #007bff;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
+        }
+        .rules-list {
+            text-align: left;
             margin-bottom: 20px;
         }
-        .code-container:hover {
-            background-color: #e6f7ff;
+        .rules-list li {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .checkbox-container {
+            margin-bottom: 20px;
+        }
+        .continue-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .continue-btn.active {
+            opacity: 1;
+            pointer-events: all;
         }
         .instructions {
-            font-size: 16px;
+            padding-top: 15px;
+            font-size: 14px;
             color: #555;
         }
     </style>
 </head>
 <body>
-    <div class="code-container" id="code-container" onclick="copyCode()">
-        Loading...
-    </div>
-    <div class="instructions">
-        Click code to copy it, then use the login command in the game: <strong>/login &lt;code&gt;</strong>
+    <div class="container">
+        <h1>Server Rules and Informations</h1>
+        <ul class="rules-list">
+            <li>To play this server, you are logged to your intranet account. <strong>You are not anonymous.</strong></li>
+            <li>Any failure to comply with the following rules will result in warn, kick or ban from the Minecraft server, or from any BDE's video game events.</li>
+            <li>This server is run by the BDE. Do <strong>NOT</strong> bother the bocal for <strong>any</strong> Minecraft issue. They are not responsable.</li>
+            <li>Again, the bocal can join the server as players in their <strong>free time</strong>. If you have any issue related to 42, contact them using slack or email.</li>
+            <li>Every plugins of the server are made by the BDE, and/or by 42 students in events.<br>Plugins might have bugs. Please contact BDE if find one.<br>Any misuse of the plugins might result in sanctions.</li>
+            <li>This server is <strong>NOT</strong> a PvP/Faction. You are not allowed to steal, or destroy any builds that are not yours.<br>Faction claims are here to help to protect claims, but any griefing is forbidden.</li>
+            <li>You will have the option to enable or disable PvP. Don't bother people that have the PvP disabled.</li>
+            <li>The server doesn't have Spawn area yet.<br><strong>Do NOT claim between -5000->5000 coordinates.</strong><br>Any claim in this area might get removed, to create a good spawning area.</li>
+            <li>The server <strong>won't</strong> have map resets except for Ender Dragon respawn.<br>Think about it twice before destroying a spawner, or any valuable ressources.</li>
+            <li>The goal of this server is to link as much as we can 42 and Minecraft. Currenlty, only your level has impact in-game.<br>We will soon add other mechanics to better link the school and the game.<br><strong>We can temporaly ban people in pace 24. This server won't be an excuse for blackholes!</strong></li>
+        </ul>
+        
+        <div class="checkbox-container">
+            <input type="checkbox" id="accept-rules"> 
+            <label for="accept-rules">I read the rules and accept them.</label>
+        </div>
+
+        <button id="continue-btn" class="continue-btn">Continue</button>
+        <div class="instructions">
+            By continuing, you agree to the rules above.
+        </div>
     </div>
 
     <script>
-        // Function to get the value of a URL parameter
         function getUrlParameter(name) {
             const params = new URLSearchParams(window.location.search);
             return params.get(name);
         }
-
-        // Function to copy the formatted code to the clipboard
-        function copyCode() {
-            const code = document.getElementById('code-container').innerText;
-            const formattedCode = `/login ${code}`;
-            navigator.clipboard.writeText(formattedCode).then(() => {
-                alert(`Copied to clipboard: ${formattedCode}`);
-            }).catch(err => {
-                console.error('Failed to copy: ' + err);
-            });
-        }
-
-        // Main Logic
+    
         const code = getUrlParameter('code');
-        const container = document.getElementById('code-container');
-        if (code) {
-            container.innerText = code;
-            // Automatically copy the formatted code on page load
-            const formattedCode = `/login ${code}`;
-            navigator.clipboard.writeText(formattedCode).then(() => {
-                console.log('Code automatically copied to clipboard: ' + formattedCode);
-            }).catch(err => {
-                console.error('Failed to copy automatically: ' + err);
-            });
-        } else {
-            container.innerText = 'No code found in URL!';
+        if (history.pushState) {
+            history.replaceState(null, null, window.location.pathname);
         }
+        const checkbox = document.getElementById('accept-rules');
+        const continueBtn = document.getElementById('continue-btn');
+
+        // Enable the Continue button only if the checkbox is checked
+        checkbox.addEventListener('change', function() {
+            if (checkbox.checked) {
+                continueBtn.classList.add('active');
+                continueBtn.onclick = function() {
+                    // Prepare the URL for the login page with the code parameter
+                    let loginUrl = 'login.html';  // Replace with the correct path to your login page
+                    
+                    // Append the code parameter to the URL if it exists
+                    if (code) {
+                        loginUrl += `?code=${encodeURIComponent(code)}`;
+                    }
+                    window.location.href = loginUrl;
+                };
+            } else {
+                continueBtn.classList.remove('active');
+                continueBtn.onclick = null;
+            }
+        });
     </script>
 </body>
 </html>
